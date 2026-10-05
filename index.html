@@ -644,8 +644,7 @@ window.setLang=function(l,save){
 };
 window.addEventListener('DOMContentLoaded',function(){});
 [].slice.call(document.querySelectorAll('.lang button')).forEach(function(b){b.onclick=function(){setLang(b.getAttribute('data-l'),true)}});
-var s=null;try{s=localStorage.getItem('tna-lang')}catch(e){}
-if(!s){var nl=(navigator.language||'es').toLowerCase();s=nl.indexOf('pt')===0?'pt':nl.indexOf('en')===0?'en':'es'}
+var s='es';
 window.__initLang=s;
 })();
 </script>
