@@ -117,7 +117,7 @@ select{font:inherit;font-weight:600;color:var(--ink);background:var(--surface);b
 .count small{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ff8a5c}
 .count output{font-size:clamp(40px,5vw,60px);font-weight:800;color:#fff;font-variant-numeric:tabular-nums;line-height:1.05;letter-spacing:-.02em}
 .count span{font-size:15px;color:var(--on-navy-muted)}
-.tz2{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px}.tz2 label{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#ff8a5c}.tz2 select{background:var(--navy);color:#fff;border-color:#2c4a73;font-size:14px;padding:8px 12px;flex:1;min-width:0}
+
 .prods{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
 .prod{background:var(--navy-2);border:1px solid #2c4a73;border-radius:22px;padding:22px;display:grid;gap:18px;align-content:start}
 .prod .shotf{margin:0;display:grid;gap:8px}.prod .shotf img{border-radius:14px;border:1px solid #2c4a73;width:100%;height:auto}.prod .shotf figcaption{font-size:14px;color:var(--on-navy-muted)}.prod .badge{justify-self:start;background:var(--brand);color:#1a0a02;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
@@ -318,7 +318,7 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-size:14px;c
 <section id="vip" class="sell">
 <div class="sell-top">
 <div class="txt"><p class="eyebrow">Acceso VIP</p><h2>Esto es lo que ven los miembros</h2><p class="lead">La Sala de Señales y las Transmisiones VIP, desbloqueadas. Mira qué pasa dentro y entra a la próxima sesión.</p></div>
-<div class="count" aria-live="off"><small>Próxima sesión VIP en</small><output id="cd">--:--:--</output><span id="cdinfo" data-dyn>Sesión programada hoy</span><div class="tz2"><label for="tz2">Zona horaria</label><select id="tz2"></select></div></div>
+<div class="count" aria-live="off"><small>Cuenta regresiva para la próxima live VIP</small><output id="cd" aria-label="Horas, minutos y segundos que faltan para que empiece la próxima transmisión VIP en vivo.">--:--:--</output><span>Horas, minutos y segundos que faltan para que empiece la próxima transmisión VIP en vivo.</span></div>
 </div>
 
 <div class="prods">
@@ -470,7 +470,7 @@ pt:{
 'Dos bloques: transmisiones en vivo y señales VIP.':'Dois blocos: transmissões ao vivo e sinais VIP.',
 'Acceso VIP':'Acesso VIP','Lo que ocurre detrás del candado':'O que acontece atrás do cadeado',
 'Cada día hay sesiones que solo ven los miembros. Mira qué incluye cada acceso y entra a la próxima.':'Todo dia há sessões que só os membros veem. Veja o que cada acesso inclui e entre na próxima.',
-'Próxima sesión VIP en':'Próxima sessão VIP em','Sesión programada hoy':'Sessão programada para hoje',
+'Cuenta regresiva para la próxima live VIP':'Contagem regressiva para a próxima live VIP','Horas, minutos y segundos que faltan para que empiece la próxima transmisión VIP en vivo.':'Horas, minutos e segundos que faltam para começar a próxima transmissão VIP ao vivo.','Sesión programada hoy':'Sessão programada para hoje',
 'Plan VIP Señales':'Plano VIP Sinais','Sala de Señales':'Sala de Sinais',
 'Para quien no tiene tiempo de seguir las transmisiones y quiere operar cada día.':'Para quem não tem tempo de acompanhar as transmissões e quer operar todo dia.',
 '3 sesiones por día: 10:00, 14:00 y 19:00 (hora Colombia)':'3 sessões por dia: 10:00, 14:00 e 19:00 (horário da Colômbia)',
@@ -565,7 +565,7 @@ en:{
 'Dos bloques: transmisiones en vivo y señales VIP.':'Two blocks: live broadcasts and VIP signals.',
 'Acceso VIP':'VIP access','Lo que ocurre detrás del candado':'What happens behind the lock',
 'Cada día hay sesiones que solo ven los miembros. Mira qué incluye cada acceso y entra a la próxima.':'Every day there are sessions only members can see. Check what each access includes and join the next one.',
-'Próxima sesión VIP en':'Next VIP session in','Sesión programada hoy':'Session scheduled today',
+'Cuenta regresiva para la próxima live VIP':'Countdown to the next VIP live','Horas, minutos y segundos que faltan para que empiece la próxima transmisión VIP en vivo.':'Hours, minutes and seconds left until the next live VIP broadcast starts.','Sesión programada hoy':'Session scheduled today',
 'Plan VIP Señales':'VIP Signals plan','Sala de Señales':'Signals Room',
 'Para quien no tiene tiempo de seguir las transmisiones y quiere operar cada día.':'For people who have no time to follow the broadcasts and want to trade every day.',
 '3 sesiones por día: 10:00, 14:00 y 19:00 (hora Colombia)':'3 sessions a day: 10:00, 14:00 and 19:00 (Colombia time)',
@@ -683,10 +683,8 @@ window.__initLang=s;
 
   // Venta VIP: cuenta regresiva y agenda de hoy, siguiendo la zona elegida (base Colombia, UTC-5)
   var PR=[{n:'Señales',h:[10,14,19],t:'Sala de Señales'},{n:'VIP',h:[11,13,17],t:'Transmisión VIP'}];
-  var cd=document.getElementById('cd'),cdi=document.getElementById('cdinfo'),td=document.getElementById('today'),tz2=document.getElementById('tz2');
-  if(tz2){tz2.innerHTML=sel2.innerHTML;tz2.value=sel2.value;
-    tz2.onchange=function(){sel2.value=tz2.value;upd();tick()};
-    sel2.addEventListener('change',function(){tz2.value=sel2.value;tick()});}
+  var cd=document.getElementById('cd'),td=document.getElementById('today');
+  sel2.addEventListener('change',tick);
   function two(n){return (n<10?'0':'')+n}
   function curOff(){var v=sel2.value;return v==='device'?-new Date().getTimezoneOffset()/60:parseFloat(v)}
   function offLabel(o){var a=Math.abs(o),h=Math.floor(a),m=Math.round((a-h)*60);return 'UTC'+(o<0?'−':'+')+h+(m?':'+two(m):'')}
@@ -699,18 +697,19 @@ window.__initLang=s;
   }
   function tick(){
     if(!cd)return;
-    var now=Date.now(),off=curOff(),all=slots(now),next=null;
-    for(var k=0;k<all.length;k++){if(all[k].t>now){next=all[k];break}}
+    var now=Date.now(),off=curOff(),all=slots(now),next=null,nextAny=null;
+    for(var j=0;j<all.length;j++){if(all[j].t>now){nextAny=all[j];break}}
+    for(var k=0;k<all.length;k++){if(all[k].t>now&&all[k].p.n==='VIP'){next=all[k];break}}
     if(next){var s=Math.max(0,Math.floor((next.t-now)/1000));
       cd.textContent=two(Math.floor(s/3600))+':'+two(Math.floor(s%3600/60))+':'+two(s%60);
-      cdi.textContent=T(next.p.t)+T(' a las ')+hhmm(next.t,off)+' ('+offLabel(off)+')';}
+}
     var today=all.filter(function(x){return dayIdx(x.t,off)===dayIdx(now,off)});
     td.innerHTML='';
     today.forEach(function(x){
       var li=document.createElement('li'),st,diff=x.t-now;
       if(diff<=0&&diff>-3600000){st=T('En curso');li.className='next'}
       else if(diff<=0){st=T('Finalizada');li.className='past'}
-      else if(next&&x.t===next.t){st=T('Próxima');li.className='next'}
+      else if(nextAny&&x.t===nextAny.t){st=T('Próxima');li.className='next'}
       else st=T('Más tarde');
       var b=document.createElement('b');b.textContent=hhmm(x.t,off);
       var em=document.createElement('em');em.textContent=(x.p.n==='VIP'&&x.i===2)?T('Transmisión VIP + masterclass'):T(x.p.t);
